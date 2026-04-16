@@ -1,0 +1,4 @@
+Name: Tiny Knit Current Rmd
+Description: Run tiny_knit on the active R Markdown document
+Binding: tiny_knit_addin
+Interactive: false
