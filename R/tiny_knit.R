@@ -34,7 +34,7 @@
 #'   \item the active document is not an `.Rmd` file
 #' }
 #'
-#' @importFrom rstudioapi getActiveDocumentContext isAvailable
+#' @importFrom rstudioapi getSourceEditorContext isAvailable
 #' @importFrom xfun sans_ext
 #' @importFrom httr GET content
 #' @importFrom rmarkdown render
@@ -58,11 +58,15 @@ tiny_knit <- function (doc = NULL) {
       stop("`doc` must be provided when not using RStudio.", call. = FALSE)
     }
 
-    ctx <- rstudioapi::getActiveDocumentContext()
+    ctx <- rstudioapi::getSourceEditorContext()
     doc <- ctx$path
 
     if (!nzchar(doc)) {
-      stop("Active document has no path. Please save the file first.", call. = FALSE)
+      stop(
+        "No saved R Markdown file was found in the Source pane. ",
+        "Please save the file and make sure it is open in RStudio.",
+        call. = FALSE
+      )
     }
   }
 
