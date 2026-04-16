@@ -30,6 +30,10 @@ devtools::install("NISRA-Tech-Lab/tinyknit")
 ```r
 library(tinyknit)
 
+# Use the currently open R Markdown file in RStudio
+tiny_knit()
+
+# Or specify a file explicitly
 tiny_knit("path/to/report.Rmd")
 ```
 

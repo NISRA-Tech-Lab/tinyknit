@@ -4,10 +4,11 @@
 \alias{tiny_knit}
 \title{Render an R Markdown file as a reduced-size HTML report}
 \usage{
-tiny_knit(doc)
+tiny_knit(doc = NULL)
 }
 \arguments{
-\item{doc}{A character string. Path to a single input \code{.Rmd} file.}
+\item{doc}{A character string. Path to a single input \code{.Rmd} file.
+If \code{NULL} (default), the path of the active document in RStudio will be used.}
 }
 \value{
 Invisibly returns the path to the generated HTML file.
@@ -19,6 +20,9 @@ embeds remaining local assets where needed, and saves a timestamped output
 HTML file in an \verb{_outputs} directory beside the source file.
 }
 \details{
+If \code{doc} is not supplied, the function will attempt to use the currently
+active document in RStudio.
+
 This function:
 \itemize{
 \item creates a temporary \verb{_tiny.Rmd} version of the source file
@@ -31,9 +35,20 @@ This function:
 
 The output directory is created in the same parent directory as \code{doc}, with
 the name \code{"<parent-folder>_outputs"}.
+
+When \code{doc = NULL}, the function requires RStudio and will error if:
+\itemize{
+\item RStudio is not available
+\item the active document has not been saved to disk
+\item the active document is not an \code{.Rmd} file
+}
 }
 \examples{
 \dontrun{
+# Use active RStudio document
+tiny_knit()
+
+# Or specify a file explicitly
 tiny_knit("report.Rmd")
 }
 

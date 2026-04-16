@@ -5,7 +5,11 @@
 #' embeds remaining local assets where needed, and saves a timestamped output
 #' HTML file in an `_outputs` directory beside the source file.
 #'
+#' If `doc` is not supplied, the function will attempt to use the currently
+#' active document in RStudio.
+#'
 #' @param doc A character string. Path to a single input `.Rmd` file.
+#'   If `NULL` (default), the path of the active document in RStudio will be used.
 #'
 #' @return Invisibly returns the path to the generated HTML file.
 #'
@@ -23,6 +27,14 @@
 #' The output directory is created in the same parent directory as `doc`, with
 #' the name `"<parent-folder>_outputs"`.
 #'
+#' When `doc = NULL`, the function requires RStudio and will error if:
+#' \itemize{
+#'   \item RStudio is not available
+#'   \item the active document has not been saved to disk
+#'   \item the active document is not an `.Rmd` file
+#' }
+#'
+#' @importFrom rstudioapi getActiveDocumentContext isAvailable
 #' @importFrom xfun sans_ext
 #' @importFrom httr GET content
 #' @importFrom rmarkdown render
@@ -30,12 +42,31 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Use active RStudio document
+#' tiny_knit()
+#'
+#' # Or specify a file explicitly
 #' tiny_knit("report.Rmd")
 #' }
 #'
 #' @export
-tiny_knit <- function (doc) {
+tiny_knit <- function (doc = NULL) {
 
+  # If no doc supplied, try to use active RStudio document ####
+  if (is.null(doc)) {
+    if (!rstudioapi::isAvailable()) {
+      stop("`doc` must be provided when not using RStudio.", call. = FALSE)
+    }
+
+    ctx <- rstudioapi::getActiveDocumentContext()
+    doc <- ctx$path
+
+    if (!nzchar(doc)) {
+      stop("Active document has no path. Please save the file first.", call. = FALSE)
+    }
+  }
+
+  # Validate input ####
   if (!is.character(doc) || length(doc) != 1 || !grepl("\\.[Rr]md$", doc)) {
     stop("`doc` must be a path to a single .Rmd file", call. = FALSE)
   }
