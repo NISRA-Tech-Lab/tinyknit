@@ -122,6 +122,7 @@ tiny_knit <- function (doc = NULL) {
   html_file_name <- paste0(output_dir, "/", sub(".html", paste0("_", format(Sys.time(), "%d-%m-%Y_%H%M"), ".html"), output_file))
   writeLines(output_new, html_file_name)
   file.remove(paste0(output_dir, "/", output_file))
+  unlink(paste0(output_dir, "/", output_files), recursive = TRUE)
   message("Tiny output created at: ", html_file_name)
   utils::browseURL(html_file_name)
   invisible(html_file_name)
