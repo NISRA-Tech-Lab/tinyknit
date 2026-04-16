@@ -1,11 +1,19 @@
 Package: tinyknit
-Title: What the Package Does (One Line, Title Case)
+Title: Create Lightweight HTML Outputs from R Markdown
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Brian", "Quinn", , "brian.quinn@nisra.gov.uk", role = c("aut", "cre"))
+Description: Provides tools to render R Markdown documents into reduced-size 
+    HTML outputs by disabling self-contained mode, linking to shared external 
+    resources where available, and embedding remaining local dependencies as 
+    base64-encoded data URIs. Designed to support lightweight, shareable reports.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+Imports: 
+    rmarkdown,
+    xfun,
+    httr,
+    base64enc,
+    utils
