@@ -15,10 +15,13 @@
 #' already begin with `data:image`, the file is read and converted to a base64
 #' data URI using [base64enc::base64encode()].
 #'
+#' Multiple `<img>` tags on the same line are processed individually.
+#'
 #' Relative paths containing the parent folder name are rewritten using the
 #' directory of `doc` before encoding.
 #'
 #' @importFrom base64enc base64encode
+#' @importFrom tools file_ext
 #'
 #' @examples
 #' \dontrun{
@@ -27,23 +30,56 @@
 #' }
 #'
 #' @export
-embed_sourced_images <- function (doc, lines) {
+embed_sourced_images <- function(doc, lines) {
 
-  imgs <- lines[grepl("<img", lines)]
+  img_lines <- which(grepl("<img", lines, fixed = TRUE))
 
-  for (img in imgs) {
-    if (!grepl("data:image", img)) {
-      name <- sub('".*', '', sub(paste0('.*src="'), '', img))
-      path <- sub(paste0("../", basename(dirname(doc))),
-                  dirname(doc),
-                  name,
-                  fixed = TRUE)
-      lines <- sub(name,
-                        paste0("data:image/png;base64,", base64enc::base64encode(path)),
-                        lines)
+  for (i in img_lines) {
+    line <- lines[i]
+
+    img_tags <- regmatches(line, gregexpr("<img[^>]+/?>", line, perl = TRUE))[[1]]
+
+    if (length(img_tags) == 0) {
+      next
     }
+
+    for (img in img_tags) {
+      if (!grepl('src="data:image', img, fixed = TRUE)) {
+
+        name <- sub('".*', "", sub('.*src="', "", img))
+        path <- sub(
+          paste0("../", basename(dirname(doc))),
+          dirname(doc),
+          name,
+          fixed = TRUE
+        )
+
+        ext <- tolower(tools::file_ext(path))
+        mime <- switch(
+          ext,
+          png  = "image/png",
+          jpg  = "image/jpeg",
+          jpeg = "image/jpeg",
+          gif  = "image/gif",
+          svg  = "image/svg+xml",
+          NULL
+        )
+
+        if (is.null(mime)) {
+          next
+        }
+
+        new_src <- paste0(
+          "data:", mime, ";base64,",
+          base64enc::base64encode(path)
+        )
+
+        line <- sub(name, new_src, line, fixed = TRUE)
+      }
+    }
+
+    lines[i] <- line
   }
 
-  return(lines)
-
+  lines
 }
