@@ -1,6 +1,6 @@
 Package: tinyknit
 Title: Create Lightweight HTML Outputs from R Markdown
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: 
     person("Brian", "Quinn", , "brian.quinn@nisra.gov.uk", role = c("aut", "cre"))
 Description: Provides tools to render R Markdown documents into reduced-size 
@@ -10,7 +10,6 @@ Description: Provides tools to render R Markdown documents into reduced-size
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Imports: 
     rmarkdown,
     xfun,
@@ -18,3 +17,4 @@ Imports:
     base64enc,
     utils,
     rstudioapi
+Config/roxygen2/version: 8.0.0

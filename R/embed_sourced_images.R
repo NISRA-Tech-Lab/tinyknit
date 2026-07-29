@@ -48,8 +48,8 @@ embed_sourced_images <- function(doc, lines) {
 
         name <- sub('".*', "", sub('.*src="', "", img))
         path <- sub(
-          paste0("../", basename(dirname(doc))),
-          dirname(doc),
+          "../",
+          paste0(dirname(dirname(doc)), "/"),
           name,
           fixed = TRUE
         )

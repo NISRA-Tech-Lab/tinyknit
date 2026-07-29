@@ -23,7 +23,7 @@ create more self-contained HTML output.
 \details{
 The function looks for \verb{<img>} tags in \code{lines}. If an image source does not
 already begin with \code{data:image}, the file is read and converted to a base64
-data URI using \code{\link[base64enc:base64]{base64enc::base64encode()}}.
+data URI using \code{\link[base64enc:base64encode]{base64enc::base64encode()}}.
 
 Multiple \verb{<img>} tags on the same line are processed individually.
 
