@@ -46,7 +46,7 @@ embed_sourced_images <- function(doc, lines) {
     for (img in img_tags) {
       if (!grepl('src="data:image', img, fixed = TRUE)) {
 
-        name <- sub('".*', "", sub('.*src="', "", img))
+        name <- sub('.*src\\s*=\\s*"([^"]+)".*', '\\1', img)
         path <- sub(
           "../",
           paste0(dirname(dirname(doc)), "/"),

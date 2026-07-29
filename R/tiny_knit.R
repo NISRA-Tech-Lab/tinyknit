@@ -98,7 +98,48 @@ tiny_knit <- function (doc = NULL) {
   ## style.css ####
   output_new <- output_raw
 
-  output_new[which(grepl("style.css", output_new))] <- '<link rel="stylesheet" href="https://nisra-tech-lab.github.io/rs-resources/css/style.css" type="text/css" />'
+  # output_new[which(grepl("style.css", output_new))] <- '<link rel="stylesheet" href="https://nisra-tech-lab.github.io/rs-resources/css/style.css" type="text/css" />'
+
+  css_index <- which(grepl(
+    'href\\s*=\\s*["\'][^"\']*style\\.css',
+    output_new,
+    ignore.case = TRUE,
+    perl = TRUE
+  ))
+
+  if (length(css_index) == 0L) {
+    stop("No style.css link was found in the HTML.", call. = FALSE)
+  }
+
+  css_line <- output_new[css_index[1L]]
+
+  css_name <- sub(
+    '.*href\\s*=\\s*["\']([^"\']+)["\'].*',
+    "\\1",
+    css_line,
+    perl = TRUE
+  )
+
+  css_name_full <- if (startsWith(css_name, "../")) {
+    file.path(
+      dirname(dirname(doc)),
+      sub("^\\.\\./", "", css_name)
+    )
+  } else {
+    file.path(dirname(doc), css_name)
+  }
+
+  css_name_full <- normalizePath(
+    css_name_full,
+    winslash = "/",
+    mustWork = TRUE
+  )
+
+  output_new <- replace_stylesheet(
+    html = output_new,
+    local_css = css_name_full,
+    linked_css = basename(css_name)
+  )
 
   ## cookies_script.js ####
   output_new <- sub("cookies_script.js", "https://nisra-tech-lab.github.io/rs-resources/js/cookies_script.js", output_new)
