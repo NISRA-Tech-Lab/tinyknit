@@ -23,6 +23,12 @@ You can install the development version from source:
 devtools::install("NISRA-Tech-Lab/tinyknit")
 ```
 
+or
+
+```r
+renv::install("NISRA-Tech-Lab/tinyknit")
+```
+
 ---
 
 ## Usage
